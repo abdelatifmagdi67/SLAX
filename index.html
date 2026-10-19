@@ -3,266 +3,184 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b1220">
-<title>دلتا — تعلّم Luau وبرمجة روبلوكس بالعربي</title>
+<title>دلتا - إدارة السكريبتات</title>
 <style>
-:root{--bg:#0b1220;--card:#111c33;--card2:#16233d;--text:#e8eefc;--muted:#9fb0cc;--line:#1f2d4a;--acc:#4cc9f0;--acc2:#b388ff;--ok:#3ddc97;--warn:#ffb703;--bad:#ff6b6b;--r:14px}
-[data-theme="light"]{--bg:#f5f7fb;--card:#fff;--card2:#f7f9fd;--text:#0e1626;--muted:#5b6b85;--line:#e2e8f2}
+:root{--bg:#0b1220;--card:#111c33;--card2:#16233d;--text:#e8eefc;--muted:#9fb0cc;--line:#1f2d4a;--acc:#4cc9f0;--acc2:#b388ff;--ok:#3ddc97;--bad:#ff6b6b;--r:14px}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;padding:0}
-body{font-family:system-ui,"Segoe UI",Tahoma,"Noto Naskh Arabic",Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.85;font-size:16px;padding-bottom:80px}
-a{color:var(--acc);text-decoration:none}
-button,input,textarea,select{font-family:inherit;font-size:inherit;color:inherit}
-.wrap{max-width:1000px;margin:0 auto;padding:0 14px}
-header{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.h-in{display:flex;align-items:center;gap:10px;height:58px}
-.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:17px}
-.logo svg{width:30px;height:30px}
-.logo small{display:block;font-weight:500;font-size:11px;color:var(--muted);line-height:1}
-.spacer{flex:1}
-.icon-btn{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--card);display:grid;place-items:center;cursor:pointer}
-nav.tabs{display:flex;gap:6px;overflow-x:auto;padding:8px 14px 10px;scrollbar-width:none;max-width:1000px;margin:0 auto}
-nav.tabs::-webkit-scrollbar{display:none}
-.tab-btn{flex:none;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);cursor:pointer;font-size:13px;white-space:nowrap;color:var(--muted);font-weight:700}
-.tab-btn.active{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#071019;border-color:transparent}
-.section{display:none;animation:fade .25s ease}
-.section.active{display:block}
-@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-h1{font-size:clamp(24px,6vw,34px);line-height:1.35;margin:20px 0 8px}
-h2{font-size:clamp(19px,4.5vw,24px);margin:24px 0 10px}
-h3{font-size:17px;margin:16px 0 6px}
-p{margin:0 0 12px;color:var(--muted)}
-.lead{color:var(--muted);font-size:16px}
-.hero{background:radial-gradient(1200px 400px at 80% -10%,rgba(76,201,240,.15),transparent),radial-gradient(900px 400px at 10% 10%,rgba(179,136,255,.13),transparent);border:1px solid var(--line);border-radius:22px;padding:26px 18px;margin:14px 0}
-.hero .badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px;background:rgba(76,201,240,.15);color:var(--acc);border:1px solid rgba(76,201,240,.3);margin-bottom:10px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
-.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
-.stat b{display:block;font-size:20px;color:var(--acc)}
-.stat span{font-size:12px;color:var(--muted)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:12px}
-.grid{display:grid;gap:10px}
-@media(min-width:680px){.grid.two{grid-template-columns:1fr 1fr}}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 18px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--text);cursor:pointer;font-weight:700;font-size:14px;transition:.15s}
+body{font-family:system-ui,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;margin:0;padding:20px 14px}
+.wrap{max-width:800px;margin:0 auto}
+h2{color:var(--acc);margin-top:0}
+h3{font-size:16px;margin:20px 0 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:16px}
+label{display:block;margin-bottom:10px;font-size:13px;color:var(--muted);font-weight:bold}
+input[type=text],textarea{width:100%;padding:12px;border-radius:8px;border:1px solid var(--line);background:#06101e;color:var(--text);font-family:monospace;font-size:14px;margin-top:6px}
+textarea{min-height:150px;resize:vertical;direction:ltr;text-align:left}
+.btn{padding:10px 16px;border-radius:8px;border:none;font-weight:bold;cursor:pointer;font-size:14px;margin-left:5px;margin-bottom:5px}
+.btn.primary{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#071019}
+.btn.danger{background:rgba(255,107,107,.1);color:var(--bad);border:1px solid rgba(255,107,107,.3)}
+.btn.sm{padding:6px 10px;font-size:12px;border-radius:6px}
 .btn:active{transform:scale(.97)}
-.btn.primary{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#071019;border-color:transparent}
-.btn.ghost{background:transparent}
-.btn.sm{padding:7px 12px;font-size:12px;border-radius:8px}
-.btn.danger{background:rgba(255,107,107,.1);color:var(--bad);border-color:rgba(255,107,107,.35)}
-.btn:disabled{opacity:.5;cursor:not-allowed}
-label.field{display:block;margin-bottom:12px;font-size:13px;color:var(--muted);font-weight:700}
-input[type=text]{display:block;width:100%;margin-top:6px;padding:11px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--text)}
-input[type=text]:focus{outline:2px solid var(--acc);outline-offset:1px}
-.checker-box textarea,.share-code{width:100%;min-height:200px;padding:12px;border-radius:10px;border:1px solid var(--line);background:#06101e;color:#cdd6f4;font-family:'Courier New',monospace;font-size:13px;line-height:1.55;direction:ltr;text-align:left;resize:vertical}
-.checker-box textarea:focus,.share-code:focus{outline:2px solid var(--acc);outline-offset:1px}
-.result-card{border-radius:12px;padding:12px 14px;margin-top:12px;border:1px solid var(--line);background:var(--card)}
-.result-card.ok{border-color:rgba(61,220,151,.4);background:rgba(61,220,151,.06)}
-.result-card.warn{border-color:rgba(255,183,3,.4);background:rgba(255,183,3,.06)}
-.result-card.err{border-color:rgba(255,107,107,.4);background:rgba(255,107,107,.06)}
-.result-card h4{margin:0 0 8px;font-size:15px}
-.result-card ul{margin:0;padding-right:18px;font-size:13.5px}
-.result-card li{margin-bottom:5px;color:var(--text);line-height:1.7}
-.info-banner{background:rgba(76,201,240,.08);border:1px solid rgba(76,201,240,.3);border-radius:12px;padding:12px 14px;margin:12px 0;font-size:13px;color:var(--text)}
-.info-banner b{color:var(--acc)}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:60;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom)}
-.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px;background:none;border:none;cursor:pointer;color:var(--muted);font-size:10px;font-weight:700}
-.bn-item svg{width:20px;height:20px}
-.bn-item.active{color:var(--acc)}
-footer{text-align:center;padding:20px 0;color:var(--muted);font-size:12px;border-top:1px solid var(--line);margin-top:24px}
-.clock-container{text-align:center;margin:20px 0;padding:20px;background:var(--card2);border-radius:16px;border:1px solid var(--line)}
-.clock-time{font-size:48px;font-weight:800;color:var(--acc);font-family:monospace;letter-spacing:2px}
-.clock-date{font-size:14px;color:var(--muted);margin-top:8px}
-pre{margin:0;background:#06101e;border:1px solid var(--line);border-radius:0 0 10px 10px;padding:12px;overflow-x:auto;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.6;direction:ltr;text-align:left;color:#cdd6f4;max-height:460px}
+.link-out{width:100%;padding:10px;border-radius:6px;border:1px solid var(--line);background:#06101e;color:var(--ok);font-family:monospace;font-size:12px;direction:ltr;text-align:left;margin-top:5px}
+.saved-item{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;background:var(--card2)}
+.saved-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.saved-title{font-weight:bold;font-size:15px;color:var(--acc)}
+.info{border-right:3px solid var(--acc);background:rgba(76,201,240,.1);padding:10px;border-radius:6px;font-size:13px;margin-bottom:15px}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="wrap h-in">
-    <div class="logo">
-      <svg viewBox="0 0 32 32" fill="none">
-        <path d="M16 3 L29 27 H3 Z" stroke="url(#g1)" stroke-width="2.5" stroke-linejoin="round"/>
-        <path d="M16 11 L23 24 H9 Z" fill="url(#g1)" opacity=".35"/>
-        <defs><linearGradient id="g1" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#4cc9f0"/><stop offset="1" stop-color="#b388ff"/></linearGradient></defs>
-      </svg>
-      <div>دلتا<small>تعلّم Luau وRoblox بالعربي</small></div>
-    </div>
-    <div class="spacer"></div>
-    <button class="icon-btn" id="themeBtn" aria-label="تبديل الوضع">🌙</button>
+<div class="wrap" id="mainUI">
+  <h2>دلتا - إدارة السكريبتات</h2>
+  
+  <div class="info">
+    <b>طريقة الاستخدام:</b><br>
+    1. حط اسم السكريبت، وحط الكود بتاعك.<br>
+    2. دوس "حفظ وإصدار رابط".<br>
+    3. هتلاقي رابطين: واحد للمعاينة (صفحة بيضا)، وواحد للتشغيل (Raw) تحطه في الدلتا إكسكيوتور.
   </div>
-  <nav class="tabs" id="tabs">
-    <button class="tab-btn active" data-tab="home">الرئيسية</button>
-    <button class="tab-btn" data-tab="checker">فاحص الأكواد</button>
-    <button class="tab-btn" data-tab="runner">تشغيل سكريبت</button>
-    <button class="tab-btn" data-tab="about">عن دلتا</button>
-  </nav>
-</header>
 
-<main class="wrap" id="mainContent">
+  <!-- إنشاء سكريبت جديد -->
+  <div class="card">
+    <h3>إضافة سكريبت جديد</h3>
+    <label>اسم السكريبت (للعرض بس)
+      <input type="text" id="scriptName" placeholder="مثلاً: سكريبت طيران">
+    </label>
+    <label>كود السكريبت (Lua)
+      <textarea id="scriptCode" placeholder="-- الزق الكود هنا" spellcheck="false"></textarea>
+    </label>
+    <button class="btn primary" id="saveBtn">💾 حفظ وإصدار رابط</button>
+    <button class="btn danger" id="clearBtn">مسح الخانات</button>
+    <div id="resultBox" style="margin-top:15px"></div>
+  </div>
 
-  <section class="section active" id="home">
-    <div class="hero">
-      <span class="badge">● مسار عربي كامل لـ Roblox</span>
-      <h1>اتعلم Luau بالعربي — من الصفر للاحتراف</h1>
-      <p class="lead">دروس مرتبة، أمثلة كود جاهزة، فاحص سكريبتات يمسك غلطاتك.</p>
-      <button class="btn primary" data-goto="runner">افتح صفحة التشغيل</button>
-    </div>
-  </section>
-
-  <section class="section" id="checker">
-    <h2>فاحص الأكواد</h2>
-    <p>الزق كود Lua/Luau تحت، واضغط «افحص».</p>
-    <div class="card checker-box">
-      <textarea id="codeInput" placeholder="-- الزق كود Lua هنا" spellcheck="false"></textarea>
-      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-        <button class="btn primary" id="checkBtn">🔍 افحص الكود</button>
-        <button class="btn ghost" id="clearBtn">مسح</button>
-      </div>
-      <div id="checkResult"></div>
-    </div>
-  </section>
-
-  <!-- تبويب تشغيل السكريبت والساعة -->
-  <section class="section" id="runner">
-    <h2>ساعة وتشغيل سكريبت من رابط</h2>
-    
-    <div class="clock-container">
-      <div class="clock-time" id="liveClock">00:00:00</div>
-      <div class="clock-date" id="liveDate">جاري التحميل...</div>
-    </div>
-
-    <div class="info-banner">
-      <b>⚠️ تنبيه مهم جداً:</b> لما تحط رابط، لازم يكون <b>رابط خام (Raw)</b>. يعني رابط بيفتح صفحة بيضا فيها الكود بس. <br>
-      ❌ <b>غلط:</b> رابط موقع، أو رابط صفحة <code>index.html</code>.<br>
-      ✅ <b>صح:</b> رابط من جيت هاب بيدوس عليه (Raw)، أو من Pastebin بيدوس عليه (raw).
-    </div>
-
-    <div class="card">
-      <h3>🔗 شغل سكريبت من رابط (URL)</h3>
-      <p>حط الرابط الخام هنا، والموقع هيجيب الكود ويجهزلك الأمر الجاهز.</p>
-      
-      <label class="field">رابط السكريبت (Raw)
-        <input type="text" id="scriptUrlInput" placeholder="https://pastebin.com/raw/xxxxx" dir="ltr">
-      </label>
-      <button class="btn primary" id="fetchScriptBtn">⚡ جلب الكود من الرابط</button>
-      
-      <div id="fetchResult" style="margin-top:16px"></div>
-    </div>
-  </section>
-
-  <section class="section" id="about">
-    <h2>عن دلتا</h2>
-    <div class="card">
-      <p><b>دلتا</b> منصة عربية تعليمية لبرمجة روبلوكس.</p>
-    </div>
-  </section>
-
-</main>
-
-<footer class="wrap">دلتا © <span id="year"></span></footer>
-
-<nav class="bottom-nav">
-  <button class="bn-item active" data-tab="home"><span>الرئيسية</span></button>
-  <button class="bn-item" data-tab="checker"><span>الفاحص</span></button>
-  <button class="bn-item" data-tab="runner"><span>التشغيل والساعة</span></button>
-  <button class="bn-item" data-tab="about"><span>عن دلتا</span></button>
-</nav>
+  <!-- السكريبتات المحفوظة -->
+  <div class="card">
+    <h3>السكريبتات المحفوظة (على جهازك)</h3>
+    <div id="savedList"></div>
+  </div>
+</div>
 
 <script>
-const $=(s,r=document)=>r.querySelector(s);
-const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-const store={get(k,d){try{return JSON.parse(localStorage.getItem('delta.'+k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem('delta.'+k,JSON.stringify(v))}catch(e){}}};
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=s=>document.querySelector(s);
+const store={
+  get:()=>JSON.parse(localStorage.getItem('delta_scripts')||'[]'),
+  set:(data)=>localStorage.setItem('delta_scripts',JSON.stringify(data))
+};
 
-function applyTheme(t){document.documentElement.dataset.theme=t;$('#themeBtn').textContent=t==='light'?'☀️':'🌙';store.set('theme',t)}
-applyTheme(store.get('theme','dark'));
-$('#themeBtn').addEventListener('click',()=>applyTheme(document.documentElement.dataset.theme==='light'?'dark':'light'));
+// دالة ترميز النص لـ Base64 (عشان الرابط)
+function encodeBase64(str){return btoa(unescape(encodeURIComponent(str)))}
+function decodeBase64(b64){return decodeURIComponent(escape(atob(b64)))}
 
-function goTab(name){
-  $$('.section').forEach(s=>s.classList.toggle('active',s.id===name));
-  $$('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
-  $$('.bn-item').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-document.addEventListener('click',e=>{
-  const t=e.target.closest('[data-tab]'); if(t)goTab(t.dataset.tab);
-  const g=e.target.closest('[data-goto]'); if(g)goTab(g.dataset.goto);
-});
+// 1. فحص لو الرابط جاي عشان يعرض السكريبت بس (وضع الصفحة البيضا)
+if(window.location.hash.startsWith('#view=')){
+  const code = decodeBase64(window.location.hash.replace('#view=',''));
+  document.body.innerHTML = '<pre style="direction:ltr;text-align:left;font-family:monospace;font-size:14px;padding:20px;margin:0;color:#fff;white-space:pre-wrap;">' + 
+    code.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") + 
+    '</pre>';
+  document.body.style.background = '#000';
+} else {
+  // 2. الكود العادي بتاع إدارة السكريبتات
+  renderList();
 
-/* ===== الساعة ===== */
-function updateClock() {
-  const now = new Date();
-  $('#liveClock').textContent = now.toLocaleTimeString('ar-EG', { hour12: false });
-  $('#liveDate').textContent = now.toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-}
-setInterval(updateClock, 1000);
-updateClock();
-
-/* ===== جلب السكريبت ===== */
-$('#fetchScriptBtn').addEventListener('click', async () => {
-  const url = $('#scriptUrlInput').value.trim();
-  const resultBox = $('#fetchResult');
-  
-  if (!url) {
-    resultBox.innerHTML = `<div class="result-card warn"><h4>⚠️ تنبيه</h4><p>حط الرابط الأول.</p></div>`;
-    return;
-  }
-
-  resultBox.innerHTML = `<div class="result-card"><p style="margin:0">⏳ جاري جلب الكود...</p></div>`;
-
-  try {
-    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
-    const response = await fetch(proxyUrl);
+  $('#saveBtn').onclick = async () => {
+    const name = $('#scriptName').value.trim() || 'سكريبت بدون اسم';
+    const code = $('#scriptCode').value;
     
-    if (!response.ok) throw new Error('فشل الاتصال');
-    
-    const code = await response.text();
-    const runCommand = `loadstring(game:HttpGet("${url}"))()`;
-    
-    resultBox.innerHTML = `
-      <div class="result-card ok">
-        <h4>✅ الكود اتجاب بنجاح</h4>
-        <p>انسخ الأمر ده وحطه في إكسكيوتور الدلتا:</p>
-        <div style="position:relative;margin:10px 0">
-          <pre style="margin:0;padding-right:50px"><code>${esc(runCommand)}</code></pre>
-          <button class="btn sm primary copy-btn" data-copy="${esc(runCommand)}" style="position:absolute;top:8px;left:8px;padding:4px 8px">نسخ</button>
-        </div>
-        <h4>👀 معاينة الكود:</h4>
-        <pre style="max-height:150px;font-size:11px"><code>${esc(code)}</code></pre>
-      </div>
-    `;
-    
-    resultBox.querySelector('.copy-btn').addEventListener('click', (e) => {
-      navigator.clipboard.writeText(e.target.dataset.copy).then(() => {
-        e.target.textContent = '✓ تم';
-        setTimeout(() => e.target.textContent = 'نسخ', 1500);
+    if(!code.trim()){ alert('حط الكود الأول!'); return; }
+
+    const resultBox = $('#resultBox');
+    resultBox.innerHTML = `<div style="color:var(--acc)">⏳ جاري الرفع وتوليد الروابط...</div>`;
+
+    // الرابط الأول: صفحة بيضا على موقعنا
+    const viewLink = window.location.origin + window.location.pathname + '#view=' + encodeBase64(code);
+
+    try {
+      // الرابط الثاني: رابط Raw حقيقي للتشغيل في روبلوكس (بنستخدم Hastebin)
+      const response = await fetch('https://hastebin.com/documents', {
+        method: 'POST',
+        body: code
       });
-    });
+      const data = await response.json();
+      const rawLink = `https://hastebin.com/raw/${data.key}`;
+      
+      // حفظ في الذاكرة
+      const scripts = store.get();
+      scripts.unshift({ id: Date.now(), name, code, viewLink, rawLink });
+      store.set(scripts);
+      
+      // عرض النتيجة
+      resultBox.innerHTML = `
+        <div class="card" style="border-color:var(--ok)">
+          <h4 style="color:var(--ok);margin-top:0">✅ تم الحفظ بنجاح</h4>
+          
+          <label>1. رابط المعاينة (صفحة بيضا):
+            <input type="text" class="link-out" value="${viewLink}" readonly onclick="this.select()">
+          </label>
+          
+          <label>2. رابط التشغيل (حطه في الدلتا):
+            <input type="text" class="link-out" value="${rawLink}" readonly onclick="this.select()">
+          </label>
+          <div style="font-size:12px;color:var(--muted);margin-top:5px">الأمر: loadstring(game:HttpGet("${rawLink}"))()</div>
+        </div>
+      `;
+      
+      $('#scriptName').value = '';
+      $('#scriptCode').value = '';
+      renderList();
+      
+    } catch (error) {
+      resultBox.innerHTML = `<div style="color:var(--bad)">❌ فشل الرفع. جرب تاني أو استخدم الرابط الأول.</div>`;
+    }
+  };
 
-  } catch (error) {
-    resultBox.innerHTML = `<div class="result-card err"><h4>❌ خطأ</h4><p>الرابط غلط أو مش بيدعم الجلب المباشر. اتأكد إنه رابط Raw.</p></div>`;
-  }
-});
+  $('#clearBtn').onclick = () => {
+    $('#scriptName').value = '';
+    $('#scriptCode').value = '';
+    $('#resultBox').innerHTML = '';
+  };
 
-/* ===== فاحص الأكواد ===== */
-$('#checkBtn').addEventListener('click', () => {
-  const raw = $('#codeInput').value;
-  const res = $('#checkResult');
-  if(!raw.trim()) { res.innerHTML = `<div class="result-card err">مفيش كود!</div>`; return; }
-  
-  // فحص بسيط جداً
-  let errors = [];
-  if ((raw.match(/if/g)||[]).length > (raw.match(/end/g)||[]).length) errors.push("ناقص 'end' في شروط if.");
-  if ((raw.match(/function/g)||[]).length > (raw.match(/end/g)||[]).length) errors.push("ناقص 'end' في دالة.");
-  if (/while true do/.test(raw) && !/task.wait|wait/.test(raw)) errors.push("حلقة while ملهاش wait هتعلق اللعبة.");
-  
-  if (errors.length) {
-    res.innerHTML = `<div class="result-card err"><h4>❌ أخطاء:</h4><ul>${errors.map(e=>`<li>${e}</li>`).join('')}</ul></div>`;
-  } else {
-    res.innerHTML = `<div class="result-card ok"><h4>✅ سليم مبدئياً</h4></div>`;
+  // عرض السكريبتات المحفوظة
+  function renderList(){
+    const list = store.get();
+    const box = $('#savedList');
+    if(!list.length){ box.innerHTML = '<p style="color:var(--muted);font-size:13px">مفيش سكريبتات محفوظة لسه.</p>'; return; }
+    
+    box.innerHTML = list.map((s, i) => `
+      <div class="saved-item">
+        <div class="saved-header">
+          <span class="saved-title">${s.name}</span>
+          <div>
+            <button class="btn sm danger" onclick="deleteScript(${i})">حذف</button>
+          </div>
+        </div>
+        <label>رابط المعاينة: <input type="text" class="link-out" value="${s.viewLink}" readonly onclick="this.select()"></label>
+        <label>رابط التشغيل: <input type="text" class="link-out" value="${s.rawLink}" readonly onclick="this.select()"></label>
+        <button class="btn sm primary" style="margin-top:10px" onclick="editScript(${i})">تعديل الكود</button>
+      </div>
+    `).join('');
   }
-});
-$('#clearBtn').onclick = () => { $('#codeInput').value=''; $('#checkResult').innerHTML=''; };
-document.getElementById('year').textContent=new Date().getFullYear();
+
+  window.deleteScript = (index) => {
+    if(confirm('متأكد إنك عايز تمسح السكريبت ده؟')){
+      const list = store.get();
+      list.splice(index, 1);
+      store.set(list);
+      renderList();
+    }
+  };
+
+  window.editScript = (index) => {
+    const list = store.get();
+    const script = list[index];
+    $('#scriptName').value = script.name;
+    $('#scriptCode').value = script.code;
+    // مسح السكريبت القديم عشان تحفظه من جديد
+    list.splice(index, 1);
+    store.set(list);
+    renderList();
+    window.scrollTo({top:0, behavior:'smooth'});
+  };
+}
 </script>
 </body>
 </html>
