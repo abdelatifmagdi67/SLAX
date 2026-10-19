@@ -15,18 +15,19 @@ h3{font-size:16px;margin:20px 0 10px}
 label{display:block;margin-bottom:10px;font-size:13px;color:var(--muted);font-weight:bold}
 input[type=text],textarea{width:100%;padding:12px;border-radius:8px;border:1px solid var(--line);background:#06101e;color:var(--text);font-family:monospace;font-size:14px;margin-top:6px}
 textarea{min-height:150px;resize:vertical;direction:ltr;text-align:left}
-.btn{padding:10px 16px;border-radius:8px;border:none;font-weight:bold;cursor:pointer;font-size:14px;margin-left:5px;margin-bottom:5px;display:inline-block;text-decoration:none}
+.btn{padding:10px 16px;border-radius:8px;border:none;font-weight:bold;cursor:pointer;font-size:14px;margin-left:5px;margin-bottom:5px;display:inline-block;text-decoration:none;transition:0.2s}
 .btn.primary{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#071019}
-.btn.danger{background:rgba(255,107,107,.1);color:var(--bad);border:1px solid rgba(255,107,107,.3);user-select:none}
 .btn.sm{padding:6px 10px;font-size:12px;border-radius:6px}
 .btn:active{transform:scale(.97)}
+.btn.danger { background: rgba(255,107,107,0.1); color: var(--bad); border: 1px solid rgba(255,107,107,0.3); user-select: none; -webkit-user-select: none; }
+.btn.danger.holding { background: var(--bad); color: white; }
 .link-out{width:100%;padding:10px;border-radius:6px;border:1px solid var(--line);background:#06101e;color:var(--ok);font-family:monospace;font-size:12px;direction:ltr;text-align:left;margin-top:5px}
 .saved-item{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;background:var(--card2)}
-.saved-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.saved-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:10px}
 .saved-title{font-weight:bold;font-size:15px;color:var(--acc)}
 .info{border-right:3px solid var(--acc);background:rgba(76,201,240,.1);padding:10px;border-radius:6px;font-size:13px;margin-bottom:15px}
 
-/* ستايل شاشة التعديل (بيضا بالكامل) */
+/* شاشة التعديل البيضا */
 #editScreen {
   display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background: #ffffff; z-index: 9999; padding: 20px; box-sizing: border-box;
@@ -41,12 +42,12 @@ textarea{min-height:150px;resize:vertical;direction:ltr;text-align:left}
   direction: ltr; text-align: left; resize: none; margin-bottom: 15px;
 }
 #editScreen .btn-save-edit {
-  background: #000; color: #fff; padding: 12px; border: none;
+  background: #000; color: #fff; padding: 15px; border: none;
   border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;
   margin-bottom: 10px;
 }
 #editScreen .btn-cancel-edit {
-  background: #eee; color: #000; padding: 12px; border: none;
+  background: #eee; color: #000; padding: 15px; border: none;
   border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;
 }
 </style>
@@ -56,15 +57,6 @@ textarea{min-height:150px;resize:vertical;direction:ltr;text-align:left}
 <div class="wrap" id="mainUI">
   <h2>دلتا - إدارة السكريبتات</h2>
   
-  <div class="info">
-    <b>إزاي تستخدمه؟</b><br>
-    1. حط اسم السكريبت والكود، ودوس <b>حفظ</b>.<br>
-    2. هتلاقي <b>رابط خام (Raw)</b>، لو فتحته هيفتح صفحة بيضا فيها الكود بس.<br>
-    3. الرابط ده هو اللي تحطه في الدلتا عشان يشتغل.<br>
-    4. عشان تمسح سكريبت، دوس مطول (ثانية) على زرار <b>X</b>.
-  </div>
-
-  <!-- إنشاء سكريبت جديد -->
   <div class="card">
     <h3>إضافة سكريبت جديد</h3>
     <label>اسم السكريبت
@@ -73,23 +65,20 @@ textarea{min-height:150px;resize:vertical;direction:ltr;text-align:left}
     <label>كود السكريبت (Lua)
       <textarea id="scriptCode" placeholder="-- الزق الكود هنا" spellcheck="false"></textarea>
     </label>
-    <button class="btn primary" id="saveBtn">💾 حفظ وإصدار رابط</button>
-    <button class="btn danger" id="clearBtn">مسح الخانات</button>
+    <button class="btn primary" id="saveBtn" style="width:100%; padding:12px;">💾 حفظ وإصدار رابط</button>
     <div id="resultBox" style="margin-top:15px"></div>
   </div>
 
-  <!-- السكريبتات المحفوظة -->
   <div class="card">
     <h3>السكريبتات المحفوظة</h3>
     <div id="savedList"></div>
   </div>
 </div>
 
-<!-- شاشة التعديل البيضا -->
 <div id="editScreen">
   <h2 id="editTitle">تعديل السكريبت</h2>
   <textarea id="editTextarea" spellcheck="false"></textarea>
-  <button class="btn-save-edit" onclick="saveEditedScript()">حفظ التعديلات (هيطلع رابط جديد)</button>
+  <button class="btn-save-edit" id="saveEditBtn" onclick="saveEditedScript()">حفظ التعديلات (هيطلع رابط جديد)</button>
   <button class="btn-cancel-edit" onclick="closeEditScreen()">إلغاء والرجوع</button>
 </div>
 
@@ -100,20 +89,23 @@ const store={
   set:(data)=>localStorage.setItem('delta_scripts',JSON.stringify(data))
 };
 
-// دالة رفع الكود على سيرفر نصوص (عشان الرابط يبقى Raw وصفحة بيضا)
+// دالة رفع الكود على سيرفر نصوص (pastes.dev سيرفر قوي وموثوق)
 async function uploadToRaw(text) {
-  // بنستخدم paste.rs لأنه بيرجع نص خام (Raw text) ومفتوح للـ CORS
-  const res = await fetch('https://paste.rs', {
+  const res = await fetch('https://api.pastes.dev/post', {
     method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
     body: text
   });
-  if (!res.ok) throw new Error('فشل الرفع');
-  return await res.text(); // بيرجع الرابط زي https://paste.rs/abc
+  
+  if (!res.ok) throw new Error('السيرفر رفض الاستلام');
+  
+  const data = await res.json();
+  // الرابط الخام بيبقى شكله كده: https://api.pastes.dev/xxxx
+  return 'https://api.pastes.dev/' + data.key; 
 }
 
 let editingIndex = -1;
 
-// عرض السكريبتات
 function renderList(){
   const list = store.get();
   const box = $('#savedList');
@@ -123,25 +115,26 @@ function renderList(){
     <div class="saved-item">
       <div class="saved-header">
         <span class="saved-title">${s.name}</span>
-        <div>
-          <button class="btn sm primary" onclick="openEditScreen(${i})">✏️ تعديل</button>
-          <button class="btn sm danger" onmousedown="startDeleteTimer(${i})" onmouseup="cancelDeleteTimer()" onmouseleave="cancelDeleteTimer()" ontouchstart="startDeleteTimer(${i})" ontouchend="cancelDeleteTimer()">❌ امسك للمسح</button>
+        <div style="display:flex; gap:5px;">
+          <button class="btn primary sm" onclick="openEditScreen(${i})">✏️ تعديل</button>
+          <button class="btn danger sm" id="delBtn_${i}" 
+            onmousedown="startDel(${i})" onmouseup="cancelDel(${i})" onmouseleave="cancelDel(${i})"
+            ontouchstart="startDel(${i})" ontouchend="cancelDel(${i})">❌ امسك للمسح</button>
         </div>
       </div>
       
-      <label>رابط الصفحة البيضا (Raw):
+      <label style="margin-top:10px;">الرابط الخام (الصفحة البيضا):
         <input type="text" class="link-out" value="${s.rawLink}" readonly onclick="this.select()">
-        <a href="${s.rawLink}" target="_blank" class="btn sm primary" style="display:inline-block;margin-top:5px;">🔗 افتح الرابط</a>
+        <a href="${s.rawLink}" target="_blank" class="btn sm primary" style="display:inline-block;margin-top:5px;width:100%;text-align:center;">🔗 افتح الرابط</a>
       </label>
       
-      <div style="font-size:12px;color:var(--muted);margin-top:10px;direction:ltr;text-align:left;background:#000;padding:8px;border-radius:5px;">
+      <div style="font-size:12px;color:var(--ok);margin-top:10px;direction:ltr;text-align:left;background:#000;padding:10px;border-radius:5px;">
         loadstring(game:HttpGet("${s.rawLink}"))()
       </div>
     </div>
   `).join('');
 }
 
-// حفظ سكريبت جديد
 $('#saveBtn').onclick = async () => {
   const name = $('#scriptName').value.trim() || 'سكريبت بدون اسم';
   const code = $('#scriptCode').value;
@@ -156,22 +149,15 @@ $('#saveBtn').onclick = async () => {
     scripts.unshift({ id: Date.now(), name, code, rawLink });
     store.set(scripts);
     
-    resultBox.innerHTML = `<div class="card" style="border-color:var(--ok)"><h4 style="color:var(--ok);margin-top:0">✅ تم الحفظ! تحت في القائمة هتلاقي الرابط.</h4></div>`;
+    resultBox.innerHTML = `<div class="card" style="border-color:var(--ok)"><h4 style="color:var(--ok);margin-top:0">✅ تم الحفظ! تحت هتلاقي الرابط.</h4></div>`;
     $('#scriptName').value = '';
     $('#scriptCode').value = '';
     renderList();
   } catch (error) {
-    resultBox.innerHTML = `<div style="color:var(--bad)">❌ فشل الرفع. جرب تاني.</div>`;
+    resultBox.innerHTML = `<div style="color:var(--bad)">❌ فشل الرفع. جرب تغلق الـ VPN لو شغال وتاني.</div>`;
   }
 };
 
-$('#clearBtn').onclick = () => {
-  $('#scriptName').value = '';
-  $('#scriptCode').value = '';
-  $('#resultBox').innerHTML = '';
-};
-
-// شاشة التعديل
 window.openEditScreen = (index) => {
   const list = store.get();
   editingIndex = index;
@@ -190,7 +176,7 @@ window.saveEditedScript = async () => {
   const newCode = $('#editTextarea').value;
   if(!newCode.trim()){ alert('الكود فاضي!'); return; }
 
-  const btn = document.querySelector('.btn-save-edit');
+  const btn = $('#saveEditBtn');
   btn.textContent = 'جاري الحفظ...';
   btn.disabled = true;
 
@@ -198,13 +184,13 @@ window.saveEditedScript = async () => {
     const rawLink = await uploadToRaw(newCode);
     const list = store.get();
     list[editingIndex].code = newCode;
-    list[editingIndex].rawLink = rawLink; // تحديث الرابط بالكود الجديد
+    list[editingIndex].rawLink = rawLink; 
     store.set(list);
     
     closeEditScreen();
     renderList();
   } catch (error) {
-    alert('فشل حفظ التعديل.');
+    alert('فشل حفظ التعديل. جرب تغلق الـ VPN.');
   } finally {
     btn.textContent = 'حفظ التعديلات (هيطلع رابط جديد)';
     btn.disabled = false;
@@ -212,19 +198,30 @@ window.saveEditedScript = async () => {
 };
 
 // نظام الحذف (اضغط مطول)
-let deleteTimer = null;
-window.startDeleteTimer = (index) => {
-  deleteTimer = setTimeout(() => {
+let delTimer = null;
+window.startDel = (index) => {
+  const btn = document.getElementById(`delBtn_${index}`);
+  btn.classList.add('holding');
+  btn.textContent = '❌ استنى...';
+  delTimer = setTimeout(() => {
     if(confirm('متأكد إنك عايز تمسح السكريبت ده نهائياً؟')){
       const list = store.get();
       list.splice(index, 1);
       store.set(list);
       renderList();
+    } else {
+      btn.classList.remove('holding');
+      btn.textContent = '❌ امسك للمسح';
     }
-  }, 1000); // ثانية واحدة
+  }, 1000); 
 };
-window.cancelDeleteTimer = () => {
-  clearTimeout(deleteTimer);
+window.cancelDel = (index) => {
+  clearTimeout(delTimer);
+  const btn = document.getElementById(`delBtn_${index}`);
+  if(btn) {
+    btn.classList.remove('holding');
+    btn.textContent = '❌ امسك للمسح';
+  }
 };
 
 renderList();
