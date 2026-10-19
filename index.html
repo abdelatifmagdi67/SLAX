@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>دلتا - إدارة السكريبتات</title>
 <style>
+/* ستايل الموقع الأساسي (غامق) */
 :root{--bg:#0b1220;--card:#111c33;--card2:#16233d;--text:#e8eefc;--muted:#9fb0cc;--line:#1f2d4a;--acc:#4cc9f0;--acc2:#b388ff;--ok:#3ddc97;--bad:#ff6b6b;--r:14px}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:system-ui,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;margin:0;padding:20px 14px}
@@ -15,7 +16,7 @@ h3{font-size:16px;margin:20px 0 10px}
 label{display:block;margin-bottom:10px;font-size:13px;color:var(--muted);font-weight:bold}
 input[type=text],textarea{width:100%;padding:12px;border-radius:8px;border:1px solid var(--line);background:#06101e;color:var(--text);font-family:monospace;font-size:14px;margin-top:6px}
 textarea{min-height:150px;resize:vertical;direction:ltr;text-align:left}
-.btn{padding:10px 16px;border-radius:8px;border:none;font-weight:bold;cursor:pointer;font-size:14px;margin-left:5px;margin-bottom:5px}
+.btn{padding:10px 16px;border-radius:8px;border:none;font-weight:bold;cursor:pointer;font-size:14px;margin-left:5px;margin-bottom:5px;display:inline-block;text-decoration:none}
 .btn.primary{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#071019}
 .btn.danger{background:rgba(255,107,107,.1);color:var(--bad);border:1px solid rgba(255,107,107,.3)}
 .btn.sm{padding:6px 10px;font-size:12px;border-radius:6px}
@@ -25,39 +26,73 @@ textarea{min-height:150px;resize:vertical;direction:ltr;text-align:left}
 .saved-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .saved-title{font-weight:bold;font-size:15px;color:var(--acc)}
 .info{border-right:3px solid var(--acc);background:rgba(76,201,240,.1);padding:10px;border-radius:6px;font-size:13px;margin-bottom:15px}
+
+/* ستايل شاشة التعديل (بيضا بالكامل) */
+#editScreen {
+  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: #ffffff; z-index: 9999; padding: 20px; box-sizing: border-box;
+  flex-direction: column;
+}
+#editScreen.active { display: flex; }
+#editScreen h2 { color: #000; margin-top: 0; margin-bottom: 15px; }
+#editScreen textarea {
+  flex: 1; width: 100%; background: #ffffff; color: #000000;
+  border: 2px solid #ccc; border-radius: 8px; padding: 15px;
+  font-family: monospace; font-size: 15px; line-height: 1.5;
+  direction: ltr; text-align: left; resize: none; margin-bottom: 15px;
+}
+#editScreen .btn-save-edit {
+  background: #000; color: #fff; padding: 12px; border: none;
+  border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;
+  margin-bottom: 10px;
+}
+#editScreen .btn-cancel-edit {
+  background: #eee; color: #000; padding: 12px; border: none;
+  border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;
+}
 </style>
 </head>
 <body>
 
+<!-- شاشة الموقع الأساسية -->
 <div class="wrap" id="mainUI">
   <h2>دلتا - إدارة السكريبتات</h2>
   
   <div class="info">
-    <b>طريقة الاستخدام:</b><br>
-    1. حط اسم السكريبت، وحط الكود بتاعك.<br>
-    2. دوس "حفظ وإصدار رابط".<br>
-    3. هتلاقي رابطين: واحد للمعاينة (صفحة بيضا)، وواحد للتشغيل (Raw) تحطه في الدلتا إكسكيوتور.
+    <b>إزاي تستخدمه؟</b><br>
+    1. اكتب اسم السكريبت وحط الكود، ودوس <b>حفظ</b>.<br>
+    2. هتلاقي <b>رابط الصفحة البيضا</b> (تفتحه في تاب جديد تشوف الكود لوحده).<br>
+    3. وهتلاقي <b>رابط التشغيل</b> (تحطه في الدلتا إكسكيوتور).<br>
+    4. تقدر تدوس <b>تعديل</b> في أي وقت عشان تفتح شاشة بيضا تعدل فيها الكود وتحفظه من جديد.
   </div>
 
   <!-- إنشاء سكريبت جديد -->
   <div class="card">
     <h3>إضافة سكريبت جديد</h3>
-    <label>اسم السكريبت (للعرض بس)
+    <label>اسم السكريبت
       <input type="text" id="scriptName" placeholder="مثلاً: سكريبت طيران">
     </label>
     <label>كود السكريبت (Lua)
       <textarea id="scriptCode" placeholder="-- الزق الكود هنا" spellcheck="false"></textarea>
     </label>
-    <button class="btn primary" id="saveBtn">💾 حفظ وإصدار رابط</button>
+    <button class="btn primary" id="saveBtn">💾 حفظ السكريبت</button>
     <button class="btn danger" id="clearBtn">مسح الخانات</button>
     <div id="resultBox" style="margin-top:15px"></div>
   </div>
 
   <!-- السكريبتات المحفوظة -->
   <div class="card">
-    <h3>السكريبتات المحفوظة (على جهازك)</h3>
+    <h3>السكريبتات المحفوظة</h3>
     <div id="savedList"></div>
   </div>
+</div>
+
+<!-- شاشة التعديل البيضا (بتفتح فوق الموقع) -->
+<div id="editScreen">
+  <h2 id="editTitle">تعديل السكريبت</h2>
+  <textarea id="editTextarea" spellcheck="false"></textarea>
+  <button class="btn-save-edit" onclick="saveEditedScript()">حفظ التعديلات</button>
+  <button class="btn-cancel-edit" onclick="closeEditScreen()">إلغاء والرجوع</button>
 </div>
 
 <script>
@@ -67,120 +102,137 @@ const store={
   set:(data)=>localStorage.setItem('delta_scripts',JSON.stringify(data))
 };
 
-// دالة ترميز النص لـ Base64 (عشان الرابط)
-function encodeBase64(str){return btoa(unescape(encodeURIComponent(str)))}
-function decodeBase64(b64){return decodeURIComponent(escape(atob(b64)))}
+// دالة عمل رابط الصفحة البيضا (بتفتح الكود لوحده من غير موقع)
+function makeWhitePageLink(code){
+  const html = `<html><body style="background:#ffffff;color:#000000;font-family:monospace;padding:20px;white-space:pre-wrap;word-wrap:break-word;font-size:14px;line-height:1.5;">${code.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}</body></html>`;
+  return 'data:text/html;charset=utf-8,' + encodeURIComponent(html);
+}
 
-// 1. فحص لو الرابط جاي عشان يعرض السكريبت بس (وضع الصفحة البيضا)
-if(window.location.hash.startsWith('#view=')){
-  const code = decodeBase64(window.location.hash.replace('#view=',''));
-  document.body.innerHTML = '<pre style="direction:ltr;text-align:left;font-family:monospace;font-size:14px;padding:20px;margin:0;color:#fff;white-space:pre-wrap;">' + 
-    code.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") + 
-    '</pre>';
-  document.body.style.background = '#000';
-} else {
-  // 2. الكود العادي بتاع إدارة السكريبتات
-  renderList();
+let editingIndex = -1; // متغير عشان نعرف بنعدل أنهي سكريبت
 
-  $('#saveBtn').onclick = async () => {
-    const name = $('#scriptName').value.trim() || 'سكريبت بدون اسم';
-    const code = $('#scriptCode').value;
-    
-    if(!code.trim()){ alert('حط الكود الأول!'); return; }
-
-    const resultBox = $('#resultBox');
-    resultBox.innerHTML = `<div style="color:var(--acc)">⏳ جاري الرفع وتوليد الروابط...</div>`;
-
-    // الرابط الأول: صفحة بيضا على موقعنا
-    const viewLink = window.location.origin + window.location.pathname + '#view=' + encodeBase64(code);
-
-    try {
-      // الرابط الثاني: رابط Raw حقيقي للتشغيل في روبلوكس (بنستخدم Hastebin)
-      const response = await fetch('https://hastebin.com/documents', {
-        method: 'POST',
-        body: code
-      });
-      const data = await response.json();
-      const rawLink = `https://hastebin.com/raw/${data.key}`;
-      
-      // حفظ في الذاكرة
-      const scripts = store.get();
-      scripts.unshift({ id: Date.now(), name, code, viewLink, rawLink });
-      store.set(scripts);
-      
-      // عرض النتيجة
-      resultBox.innerHTML = `
-        <div class="card" style="border-color:var(--ok)">
-          <h4 style="color:var(--ok);margin-top:0">✅ تم الحفظ بنجاح</h4>
-          
-          <label>1. رابط المعاينة (صفحة بيضا):
-            <input type="text" class="link-out" value="${viewLink}" readonly onclick="this.select()">
-          </label>
-          
-          <label>2. رابط التشغيل (حطه في الدلتا):
-            <input type="text" class="link-out" value="${rawLink}" readonly onclick="this.select()">
-          </label>
-          <div style="font-size:12px;color:var(--muted);margin-top:5px">الأمر: loadstring(game:HttpGet("${rawLink}"))()</div>
+// عرض السكريبتات
+function renderList(){
+  const list = store.get();
+  const box = $('#savedList');
+  if(!list.length){ box.innerHTML = '<p style="color:var(--muted);font-size:13px">مفيش سكريبتات محفوظة لسه.</p>'; return; }
+  
+  box.innerHTML = list.map((s, i) => `
+    <div class="saved-item">
+      <div class="saved-header">
+        <span class="saved-title">${s.name}</span>
+        <div>
+          <button class="btn sm primary" onclick="openEditScreen(${i})">✏️ تعديل</button>
+          <button class="btn sm danger" onclick="deleteScript(${i})">حذف</button>
         </div>
-      `;
+      </div>
       
-      $('#scriptName').value = '';
-      $('#scriptCode').value = '';
-      renderList();
+      <label>1. رابط الصفحة البيضا:
+        <input type="text" class="link-out" value="${s.viewLink}" readonly onclick="this.select()">
+        <a href="${s.viewLink}" target="_blank" class="btn sm primary" style="display:inline-block;margin-top:5px;">🔗 افتح الصفحة البيضا</a>
+      </label>
       
-    } catch (error) {
-      resultBox.innerHTML = `<div style="color:var(--bad)">❌ فشل الرفع. جرب تاني أو استخدم الرابط الأول.</div>`;
-    }
-  };
+      <label style="margin-top:10px">2. رابط التشغيل (للدلتا):
+        <input type="text" class="link-out" value="${s.rawLink}" readonly onclick="this.select()">
+      </label>
+      <div style="font-size:12px;color:var(--muted);margin-top:5px;direction:ltr;text-align:left;">loadstring(game:HttpGet("${s.rawLink}"))()</div>
+    </div>
+  `).join('');
+}
 
-  $('#clearBtn').onclick = () => {
+// حفظ سكريبت جديد
+$('#saveBtn').onclick = async () => {
+  const name = $('#scriptName').value.trim() || 'سكريبت بدون اسم';
+  const code = $('#scriptCode').value;
+  if(!code.trim()){ alert('حط الكود الأول!'); return; }
+
+  const resultBox = $('#resultBox');
+  resultBox.innerHTML = `<div style="color:var(--acc)">⏳ جاري الحفظ وتوليد الروابط...</div>`;
+
+  const viewLink = makeWhitePageLink(code);
+
+  try {
+    // رفع الكود على سيرفر نصوص عشان رابط التشغيل يشتغل في روبلوكس
+    const response = await fetch('https://paste.rs', { method: 'POST', body: code });
+    const rawLink = await response.text(); // paste.rs بيرجع الرابط على طول
+    
+    const scripts = store.get();
+    scripts.unshift({ id: Date.now(), name, code, viewLink, rawLink });
+    store.set(scripts);
+    
+    resultBox.innerHTML = `<div class="card" style="border-color:var(--ok)"><h4 style="color:var(--ok);margin-top:0">✅ تم الحفظ بنجاح</h4></div>`;
     $('#scriptName').value = '';
     $('#scriptCode').value = '';
-    $('#resultBox').innerHTML = '';
-  };
-
-  // عرض السكريبتات المحفوظة
-  function renderList(){
-    const list = store.get();
-    const box = $('#savedList');
-    if(!list.length){ box.innerHTML = '<p style="color:var(--muted);font-size:13px">مفيش سكريبتات محفوظة لسه.</p>'; return; }
-    
-    box.innerHTML = list.map((s, i) => `
-      <div class="saved-item">
-        <div class="saved-header">
-          <span class="saved-title">${s.name}</span>
-          <div>
-            <button class="btn sm danger" onclick="deleteScript(${i})">حذف</button>
-          </div>
-        </div>
-        <label>رابط المعاينة: <input type="text" class="link-out" value="${s.viewLink}" readonly onclick="this.select()"></label>
-        <label>رابط التشغيل: <input type="text" class="link-out" value="${s.rawLink}" readonly onclick="this.select()"></label>
-        <button class="btn sm primary" style="margin-top:10px" onclick="editScript(${i})">تعديل الكود</button>
-      </div>
-    `).join('');
+    renderList();
+  } catch (error) {
+    resultBox.innerHTML = `<div style="color:var(--bad)">❌ فشل الحفظ، تأكد من الإنترنت.</div>`;
   }
+};
 
-  window.deleteScript = (index) => {
-    if(confirm('متأكد إنك عايز تمسح السكريبت ده؟')){
-      const list = store.get();
-      list.splice(index, 1);
-      store.set(list);
-      renderList();
-    }
-  };
+$('#clearBtn').onclick = () => {
+  $('#scriptName').value = '';
+  $('#scriptCode').value = '';
+  $('#resultBox').innerHTML = '';
+};
 
-  window.editScript = (index) => {
+// فتح شاشة التعديل البيضا
+window.openEditScreen = (index) => {
+  const list = store.get();
+  editingIndex = index;
+  $('#editTitle').textContent = 'تعديل: ' + list[index].name;
+  $('#editTextarea').value = list[index].code;
+  $('#editScreen').classList.add('active'); // إظهار الشاشة البيضا
+};
+
+// قفل شاشة التعديل
+window.closeEditScreen = () => {
+  $('#editScreen').classList.remove('active');
+  editingIndex = -1;
+};
+
+// حفظ التعديلات من الشاشة البيضا
+window.saveEditedScript = async () => {
+  if(editingIndex === -1) return;
+  const newCode = $('#editTextarea').value;
+  if(!newCode.trim()){ alert('الكود فاضي!'); return; }
+
+  const btn = document.querySelector('.btn-save-edit');
+  btn.textContent = 'جاري الحفظ...';
+  btn.disabled = true;
+
+  const viewLink = makeWhitePageLink(newCode);
+
+  try {
+    const response = await fetch('https://paste.rs', { method: 'POST', body: newCode });
+    const rawLink = await response.text();
+    
     const list = store.get();
-    const script = list[index];
-    $('#scriptName').value = script.name;
-    $('#scriptCode').value = script.code;
-    // مسح السكريبت القديم عشان تحفظه من جديد
+    list[editingIndex].code = newCode;
+    list[editingIndex].viewLink = viewLink;
+    list[editingIndex].rawLink = rawLink;
+    store.set(list);
+    
+    closeEditScreen();
+    renderList();
+  } catch (error) {
+    alert('فشل حفظ التعديل، تأكد من الإنترنت.');
+  } finally {
+    btn.textContent = 'حفظ التعديلات';
+    btn.disabled = false;
+  }
+};
+
+// حذف سكريبت
+window.deleteScript = (index) => {
+  if(confirm('متأكد إنك عايز تمسح السكريبت ده؟')){
+    const list = store.get();
     list.splice(index, 1);
     store.set(list);
     renderList();
-    window.scrollTo({top:0, behavior:'smooth'});
-  };
-}
+  }
+};
+
+// تشغيل القائمة أول ما الصفحة تفتح
+renderList();
 </script>
 </body>
 </html>
